@@ -6,4 +6,5 @@ This is a transcript API, enter a youtbe video url and it will give you the tran
 
 - Node.js
 - Express.js
--
+- YouTube-Transcript-Extractor
+- Dotenv
