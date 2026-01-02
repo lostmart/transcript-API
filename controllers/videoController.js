@@ -20,29 +20,61 @@ export const processVideo = async (req, res) => {
 		// 2. AI Processing
 		// We define the complex prompt here for clarity
 		const scriptArchitectPrompt = `
-  You are an expert Content Architect and YouTube Scriptwriter. 
-  Your goal is to refactor a raw, messy video transcript into a high-quality, engaging script.
+You are an expert Content Architect specializing in short-form viral content.
+Your goal is to extract the MOST valuable insights from a video transcript and create punchy, engaging social media scripts.
 
-  TASK:
-  1. Analyze the provided transcript for key insights and the core message.
-  2. Create a "Viral Hook" (first 15 seconds) that identifies a problem and promises a solution.
-  3. Reorganize the main content into logical, punchy sections. 
-  4. Write in a conversational, high-energy tone.
-  5. Remove all "filler" words and repetitive phrases.
+CONSTRAINTS:
+- This is for 60-90 second social media videos (YouTube Shorts, TikTok, Reels)
+- Each section must be 50-75 words maximum
+- Include ONLY the 3-5 most impactful points from the transcript
+- Remove ALL filler, background info, and tangents
 
-  OUTPUT FORMAT:
-  You must return a JSON object with this exact structure:
-  {
-    "title": "A click-worthy, SEO-optimized title",
-    "hook": "The first 15-30 seconds of the script",
-    "main_sections": [
-      { "heading": "Section Name", "content": "The rewritten script for this section" }
-    ],
-    "summary": "A 1-sentence wrap-up of the value provided"
-  }
+TASK:
+1. Identify the ONE core problem the video solves
+2. Create a hook following this exact structure:
+   - Sentence 1: Open with relatable problem as a question (10-12 words)
+   - Sentence 2: Include ONE specific, surprising stat or fact (12-15 words)
+   - Sentence 3: Make a clear promise of what they'll learn (12-15 words)
+   Total hook: 35-42 words maximum
+   
+3. Extract 3-5 key insights as separate sections
+4. Each section = ONE main idea with ONE supporting detail
+5. Write in short, punchy sentences (under 15 words each)
 
-  TRANSCRIPT TO REFACTOR:
-  ${fullTranscript}
+6. Create a summary following this structure:
+   - Restate the core actionable steps in order (15-20 words)
+   - Make it specific and memorable, NOT generic motivation
+   - Example: "Start with X, add Y, then Z—that's your roadmap"
+   
+7. Add a Call-to-Action:
+   - One engagement question or directive (10-15 words)
+   - Examples: "Which are you learning first? Drop it in comments!"
+   - Or: "Click the link for my complete beginner roadmap"
+
+OUTPUT FORMAT (strict JSON):
+{
+  "title": "Click-worthy title (max 60 characters)",
+  "hook": "Problem question + surprising stat + clear promise (35-42 words)",
+  "main_sections": [
+    { 
+      "heading": "Clear, benefit-driven heading (5-7 words)", 
+      "content": "Bold claim + supporting evidence + why it matters (50-75 words)"
+    }
+  ],
+  "summary": "Specific actionable steps, NOT generic motivation (15-20 words)",
+  "cta": "Engagement question or clear next action (10-15 words)"
+}
+
+IMPORTANT: 
+- Limit to 3-5 sections maximum
+- Each section is ONE idea, not multiple points
+- If the transcript is long, be ruthlessly selective - quality over quantity
+- Hook MUST follow the 3-sentence structure exactly
+- Summary MUST be actionable steps, NOT "you can do it!" fluff
+- CTA should drive engagement (comment/share/click)
+
+TRANSCRIPT TO ANALYZE:
+${fullTranscript}
 `
 
 		const response = await ai.models.generateContent({
