@@ -1,0 +1,12 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded container -->
+  <rect x="2" y="3" width="20" height="18" rx="4" stroke="currentColor" stroke-width="1.5"></rect>
+
+  <!-- Play button -->
+  <polygon points="9,8 9,16 14,12" fill="currentColor"></polygon>
+
+  <!-- Transcript lines -->
+  <line x1="15.5" y1="9" x2="19" y2="9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line>
+  <line x1="15.5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line>
+  <line x1="15.5" y1="15" x2="19" y2="15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line>
+</svg>
