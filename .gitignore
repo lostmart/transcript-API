@@ -20,3 +20,6 @@ pnp.js
 .env.test.local
 .env.production.local
 .env.development.local
+
+
+assets/audio/*.mp3

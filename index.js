@@ -3,6 +3,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 import videoRoutes from "./routes/videoRoutes.js"
+import audioRoutes from "./routes/audioRoutes.js"
 
 // Middleware to parse JSON bodies
 app.use(express.json())
@@ -19,7 +20,9 @@ app.get("/", (req, res) => {
 	res.send("Transcript API is running...")
 })
 
+// mounts routes
 app.use("/api/videos", videoRoutes)
+app.use("/api/audio", audioRoutes)
 
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`)
