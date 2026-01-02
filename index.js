@@ -1,11 +1,26 @@
 import express from "express"
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 3000
 
-app.get("/", (req, res) => {
-	res.send("Hello World!")
+import videoRoutes from "./routes/videoRoutes.js"
+
+// Middleware to parse JSON bodies
+app.use(express.json())
+
+// CORS Middleware
+app.use("/", (req, res, next) => {
+	res.setHeader("Access-Control-Allow-Origin", "*")
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+	res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+	next()
 })
 
-app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`)
+app.get("/", (req, res) => {
+	res.send("Transcript API is running...")
+})
+
+app.use("/api/videos", videoRoutes)
+
+app.listen(PORT, () => {
+	console.log(`Server is running on http://localhost:${PORT}`)
 })
