@@ -93,3 +93,4 @@ Extracts a transcript and generates a refactored script.
 - [Google AI Studio](https://ai.google.com/studio/)
 - [YouTube API](https://developers.google.com/youtube/v3/getting-started)
 - [JS-GenAI](https://github.com/googleapis/js-genai)
+- [Generate Speech](https://aistudio.google.com/generate-speech)
