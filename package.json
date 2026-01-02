@@ -1,15 +1,28 @@
 {
-  "dependencies": {
-    "express": "^5.2.1",
-    "type": "module"
-  },
-  "name": "transript-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "transcript-processor-api",
+	"version": "1.0.0",
+	"description": "An API to extract, refactor, and generate video scripts from URLs.",
+	"main": "src/index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node src/index.js",
+		"dev": "nodemon src/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"transcript",
+		"video-automation",
+		"express",
+		"api"
+	],
+	"author": "Your Name",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^5.2.1",
+		"youtube-transcript": "^1.2.1",
+		"dotenv": "^16.4.0"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.0"
+	}
 }
