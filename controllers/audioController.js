@@ -11,18 +11,18 @@ const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })
 
 export const generateAudio = async (req, res) => {
 	try {
-		const { text, voice = "Kore" } = req.body
+		const { text, voice, tone = "professional and calm" } = req.body
 
 		const response = await ai.models.generateContent({
 			model: "gemini-2.5-flash-preview-tts", // TTS-specific model
-			contents: [{ parts: [{ text: `Say this: ${text}` }] }],
+			contents: [{ parts: [{ text: `[Tone: ${tone}] Say this: ${text}` }] }],
 			config: {
 				// CRITICAL FIX: Tell the model to output audio
 				responseModalities: ["AUDIO"],
 				speechConfig: {
 					voiceConfig: {
 						prebuiltVoiceConfig: {
-							voiceName: voice,
+							voiceName: voice, // Options: 'Kore', 'Aoede', 'Callirrhoe', etc.
 						},
 					},
 				},
@@ -52,6 +52,7 @@ export const generateAudio = async (req, res) => {
 					success: true,
 					message: "MP3 generated successfully",
 					file: fileName,
+					voice,
 				})
 			})
 			.on("error", (err) => {

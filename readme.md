@@ -72,3 +72,24 @@ Extracts a transcript and generates a refactored script.
 - This API is a work in progress and may not be perfect.
 - **_VPN Requirement:_** Accessing the Google AI Studio API or YouTube scraping from certain regions (like France/EEA) may require a VPN set to the US/UK.
 - **_Auto-Generated Captions:_** This API supports both manually uploaded and auto-generated YouTube subtitles.
+
+## Audio files
+
+- Since Gemini is a reasoning model, you can get very creative with the tone field in your JSON
+
+```
+|       Tone Value      |  Effect on Audio                 |
+|-----------------------|:--------------------------------:|
+| professional and calm |  professional and calm                                     |
+| whispering            |  The model will lower its volume and add breathiness       |
+| sad and somber        |  Lowers the pitch and adds pauses for emotional effect     |
+| news anchor           |  Adds a very specific cadence and authoritative clarity    |
+| hyped and energetic   |  Increases the pitch and pace (Perfect for social media hooks)|
+| casual and friendly   |  etc ...                                                   |
+```
+
+## Official Documentation
+
+- [Google AI Studio](https://ai.google.com/studio/)
+- [YouTube API](https://developers.google.com/youtube/v3/getting-started)
+- [JS-GenAI](https://github.com/googleapis/js-genai)
