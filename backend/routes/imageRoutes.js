@@ -2,7 +2,7 @@ import express from "express"
 import {
 	searchImages,
 	fetchPhotosForVideoSections,
-} from "../controllers/imageController.js"
+} from "../controllers/imageControllers.js"
 
 const router = express.Router()
 
