@@ -39,6 +39,24 @@ npm run dev
 npm start
 ```
 
+## Folder Structure
+
+```text
+src/
+├── config/
+│   └── apiClients.js
+├── services/
+│   ├── stockPhotoService.js
+│   ├── transcriptService.js
+│   └── summaryService.js
+├── controllers/
+│   ├── videoController.js
+│   └── imageController.js
+└── routes/
+    ├── videoRoutes.js
+    └── imageRoutes.js
+```
+
 ## API Endpoints
 
 `POST /api/videos/process`

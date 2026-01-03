@@ -6,6 +6,7 @@ import cors from "cors"
 
 import videoRoutes from "./routes/videoRoutes.js"
 import audioRoutes from "./routes/audioRoutes.js"
+import imageRoutes from "./routes/imageRoutes.js"
 
 // Middleware to parse JSON bodies
 app.use(express.json())
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 // mounts routes
 app.use("/api/videos", videoRoutes)
 app.use("/api/audio", audioRoutes)
+app.use("/api/images", imageRoutes)
 
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`)
