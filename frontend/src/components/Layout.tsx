@@ -22,6 +22,26 @@ function Layout() {
 							>
 								Home
 							</Link>
+							<Link
+								to="/process"
+								className={`px-4 py-2 rounded-lg transition-colors ${
+									location.pathname === "/process"
+										? "bg-blue-100 text-blue-700"
+										: "text-gray-600 hover:bg-gray-100"
+								}`}
+							>
+								Process Video
+							</Link>
+							<Link
+								to="/images"
+								className={`px-4 py-2 rounded-lg transition-colors ${
+									location.pathname === "/images"
+										? "bg-blue-100 text-blue-700"
+										: "text-gray-600 hover:bg-gray-100"
+								}`}
+							>
+								Images
+							</Link>
 						</div>
 					</div>
 				</div>
