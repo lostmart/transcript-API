@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useVideo } from "../context/VideoContext"
+import { useOnline } from "../context/OnlineContext"
 import axios from "axios"
+
+// Import your local mock data
+import mockVideoData from "../data/videoData.json"
 
 function Home() {
 	const navigate = useNavigate()
@@ -14,11 +18,12 @@ function Home() {
 		error,
 	} = useVideo()
 	const [url, setUrl] = useState("")
+	const { onLine, setOnLine } = useOnline()
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
-		if (!url.trim()) {
+		if (!url.trim() && onLine) {
 			setError("Please enter a valid YouTube URL")
 			return
 		}
@@ -28,22 +33,35 @@ function Home() {
 		setError(null)
 
 		try {
-			const response = await axios.post(
-				"http://localhost:3000/api/videos/process",
-				{
-					url,
+			if (!onLine) {
+				// Offline mode - use local mock data
+				console.log("Using local mock data (offline mode)")
+
+				// Simulate API delay for realistic UX
+				await new Promise((resolve) => setTimeout(resolve, 1000))
+
+				// Use mock data
+				setVideoData(mockVideoData.data)
+				navigate("/edit")
+			} else {
+				// Online mode - make API call
+				const response = await axios.post(
+					"http://localhost:3000/api/video/process",
+					{
+						url,
+					}
+				)
+
+				if (!response.data.success) {
+					throw new Error(response.data.message || "Failed to process video")
 				}
-			)
 
-			if (!response.data.success) {
-				throw new Error(response.data.message || "Failed to process video")
+				// Save data to context
+				setVideoData(response.data.data)
+
+				// Navigate to edit page
+				navigate("/edit")
 			}
-
-			// Save data to context
-			setVideoData(response.data.data)
-
-			// Navigate to edit page
-			navigate("/edit")
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				// Handle axios-specific errors
@@ -74,9 +92,41 @@ function Home() {
 				</div>
 
 				<div className="bg-white rounded-2xl shadow-xl p-8">
+					{/* Online/Offline Toggle */}
+					<div className="mb-6 flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+						<div className="flex items-center gap-3">
+							<span className="text-sm font-semibold text-gray-700">Mode:</span>
+							<span
+								className={`text-sm font-medium ${
+									onLine ? "text-green-600" : "text-orange-600"
+								}`}
+							>
+								{onLine ? "🟢 Online (API)" : "🟠 Offline (Mock Data)"}
+							</span>
+						</div>
+						<button
+							type="button"
+							onClick={() => setOnLine(!onLine)}
+							className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+								onLine ? "bg-green-600" : "bg-gray-400"
+							}`}
+						>
+							<span
+								className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+									onLine ? "translate-x-6" : "translate-x-1"
+								}`}
+							/>
+						</button>
+					</div>
+
 					<form onSubmit={handleSubmit}>
 						<label className="block text-sm font-semibold text-gray-700 mb-3">
 							YouTube Video URL
+							{!onLine && (
+								<span className="ml-2 text-xs text-orange-600 font-normal">
+									(URL will be ignored - using mock data)
+								</span>
+							)}
 						</label>
 						<input
 							type="text"
@@ -96,7 +146,7 @@ function Home() {
 						<button
 							type="submit"
 							disabled={isLoading}
-							className="mt-6 w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center"
+							className="mt-6 w-full bg-blue-600 text-white py-3 px-6 rounded-sm hover:bg-blue-700 transition-colors font-semibold disabled:bg-blue-400 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center"
 						>
 							{isLoading ? (
 								<>
@@ -120,7 +170,7 @@ function Home() {
 											d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 										></path>
 									</svg>
-									Processing Video...
+									{onLine ? "Processing Video..." : "Loading Mock Data..."}
 								</>
 							) : (
 								"Generate Script"

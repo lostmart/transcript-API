@@ -22,6 +22,35 @@ function EditSummary() {
 		setFormData({ ...formData, main_sections: newSections })
 	}
 
+	const handleQueryChange = (
+		section: "hook" | "outro" | number,
+		queryIndex: number,
+		value: string
+	) => {
+		if (section === "hook") {
+			const newQueries = [...formData.hook.stock_photo_queries]
+			newQueries[queryIndex] = value
+			setFormData({
+				...formData,
+				hook: { ...formData.hook, stock_photo_queries: newQueries },
+			})
+		} else if (section === "outro") {
+			const newQueries = [...formData.outro_stock_photo_queries]
+			newQueries[queryIndex] = value
+			setFormData({ ...formData, outro_stock_photo_queries: newQueries })
+		} else {
+			// It's a section index
+			const newSections = [...formData.main_sections]
+			const newQueries = [...newSections[section].stock_photo_queries]
+			newQueries[queryIndex] = value
+			newSections[section] = {
+				...newSections[section],
+				stock_photo_queries: newQueries,
+			}
+			setFormData({ ...formData, main_sections: newSections })
+		}
+	}
+
 	const handleSave = () => {
 		setVideoData(formData)
 		navigate("/images")
@@ -60,9 +89,12 @@ function EditSummary() {
 					</div>
 
 					{/* Hook */}
-					<div className="mb-6">
+					<div className="mb-8 p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
+						<h2 className="text-lg font-semibold text-gray-900 mb-4">
+							🎣 Hook
+						</h2>
 						<label className="block text-sm font-semibold text-gray-700 mb-2">
-							Hook
+							Text
 						</label>
 						<textarea
 							value={formData.hook.text}
@@ -73,19 +105,49 @@ function EditSummary() {
 								})
 							}
 							rows={3}
-							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
 						/>
+
+						<label className="block text-sm font-semibold text-gray-700 mb-2">
+							Stock Photo Search Queries
+						</label>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							{formData.hook.stock_photo_queries.map((query, qIndex) => (
+								<input
+									key={qIndex}
+									type="text"
+									value={query}
+									onChange={(e) =>
+										handleQueryChange("hook", qIndex, e.target.value)
+									}
+									placeholder={`Query ${qIndex + 1}`}
+									className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+								/>
+							))}
+						</div>
 					</div>
 
 					{/* Sections */}
-					<div className="mb-6">
+					<div className="mb-8">
 						<h2 className="text-xl font-semibold text-gray-900 mb-4">
-							Main Sections
+							📝 Main Sections
 						</h2>
 						{formData.main_sections.map((section, index) => (
-							<div key={index} className="mb-6 p-6 bg-gray-50 rounded-lg">
+							<div
+								key={index}
+								className="mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200"
+							>
+								<div className="flex items-center gap-2 mb-4">
+									<span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+										{index + 1}
+									</span>
+									<h3 className="text-lg font-semibold text-gray-800">
+										Section {index + 1}
+									</h3>
+								</div>
+
 								<label className="block text-sm font-semibold text-gray-700 mb-2">
-									Section {index + 1} - Heading
+									Heading
 								</label>
 								<input
 									type="text"
@@ -93,8 +155,9 @@ function EditSummary() {
 									onChange={(e) =>
 										handleSectionChange(index, "heading", e.target.value)
 									}
-									className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+									className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
 								/>
+
 								<label className="block text-sm font-semibold text-gray-700 mb-2">
 									Content
 								</label>
@@ -104,8 +167,26 @@ function EditSummary() {
 										handleSectionChange(index, "content", e.target.value)
 									}
 									rows={4}
-									className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
 								/>
+
+								<label className="block text-sm font-semibold text-gray-700 mb-2">
+									Stock Photo Search Queries
+								</label>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+									{section.stock_photo_queries.map((query, qIndex) => (
+										<input
+											key={qIndex}
+											type="text"
+											value={query}
+											onChange={(e) =>
+												handleQueryChange(index, qIndex, e.target.value)
+											}
+											placeholder={`Query ${qIndex + 1}`}
+											className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+										/>
+									))}
+								</div>
 							</div>
 						))}
 					</div>
@@ -138,6 +219,30 @@ function EditSummary() {
 							}
 							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 						/>
+					</div>
+
+					{/* Outro Queries */}
+					<div className="mb-8 p-6 bg-green-50 rounded-lg border-2 border-green-200">
+						<h2 className="text-lg font-semibold text-gray-900 mb-4">
+							🎬 Outro Scene
+						</h2>
+						<label className="block text-sm font-semibold text-gray-700 mb-2">
+							Stock Photo Search Queries
+						</label>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							{formData.outro_stock_photo_queries.map((query, qIndex) => (
+								<input
+									key={qIndex}
+									type="text"
+									value={query}
+									onChange={(e) =>
+										handleQueryChange("outro", qIndex, e.target.value)
+									}
+									placeholder={`Query ${qIndex + 1}`}
+									className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+								/>
+							))}
+						</div>
 					</div>
 
 					<button

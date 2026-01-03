@@ -1,0 +1,55 @@
+{
+	"success": true,
+	"data": {
+		"title": "Break Free From Tutorial Hell: Become a True Developer",
+		"hook": {
+			"text": "Stuck in 'tutorial hell' watching endless coding courses but can't build anything? You're gaining knowledge, but without application, you're missing critical skill development. Discover the proven method to break free and become a true builder.",
+			"stock_photo_queries": [
+				"developer frustration screen",
+				"coding learning curve",
+				"empty code editor",
+				"brain block developer"
+			]
+		},
+		"main_sections": [
+			{
+				"heading": "Tutorials Aren't the Problem",
+				"content": "Tutorials are valuable for learning new concepts and core syntax. However, the real issue isn't the tutorials themselves; it's *only* consuming them without active application. You accumulate knowledge quickly but fail to develop essential practical skills. True muscle memory and problem-solving abilities emerge only through active building.",
+				"stock_photo_queries": [
+					"educational video screen",
+					"developer note taking",
+					"brain empty coding",
+					"skill vs knowledge"
+				]
+			},
+			{
+				"heading": "Build YOUR Unique Version",
+				"content": "After learning a concept from a tutorial, immediately apply it. Build something *different* from what you just saw. Don't just copy the exact tutorial app. Change features, add new functionalities, or implement your unique twist. This crucial step forces you to think critically, rather than just mechanically copying code.",
+				"stock_photo_queries": [
+					"custom software development",
+					"developer innovating ideas",
+					"building digital product",
+					"unique code structure"
+				]
+			},
+			{
+				"heading": "Embrace the Struggle",
+				"content": "Embrace getting stuck and feeling frustrated – this is precisely where the deepest learning happens. When you hit a roadblock, don't give up. Instead, use documentation, Google, or AI tools to help you debug and figure out specific problems. Tutorials teach you the tools; getting stuck and problem-solving teaches you how to master them in practice.",
+				"stock_photo_queries": [
+					"debugging code screen",
+					"developer problem solving",
+					"AI assistant coding",
+					"technical documentation"
+				]
+			}
+		],
+		"summary": "Learn concepts, immediately build unique projects, then debug and problem-solve. This is your path to becoming a true developer.",
+		"cta": "What's the first unique project you'll build? Share your ideas below!",
+		"outro_stock_photo_queries": [
+			"developer success",
+			"coding achievement",
+			"digital roadmap dark",
+			"abstract growth chart"
+		]
+	}
+}
