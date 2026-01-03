@@ -2,6 +2,8 @@ import express from "express"
 const app = express()
 const PORT = process.env.PORT || 3000
 
+import cors from "cors"
+
 import videoRoutes from "./routes/videoRoutes.js"
 import audioRoutes from "./routes/audioRoutes.js"
 
@@ -9,6 +11,7 @@ import audioRoutes from "./routes/audioRoutes.js"
 app.use(express.json())
 
 // CORS Middleware
+app.use(cors())
 app.use("/", (req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*")
 	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
