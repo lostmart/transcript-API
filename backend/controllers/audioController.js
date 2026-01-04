@@ -2,7 +2,6 @@ import { GoogleGenAI } from "@google/genai"
 import ffmpeg from "fluent-ffmpeg"
 import ffmpegStatic from "ffmpeg-static"
 import { PassThrough } from "stream"
-import fs from "fs"
 
 // Set the ffmpeg path
 ffmpeg.setFfmpegPath(ffmpegStatic)
@@ -38,7 +37,14 @@ export const generateAudio = async (req, res) => {
 		bufferStream.end(audioBuffer)
 
 		// 3. Convert PCM to MP3 using FFmpeg
-		const fileName = `./assets/audio/voiceover-${Date.now()}.mp3`
+
+		const timestamp = Date.now()
+		const fileName = `voiceover-${timestamp}.mp3`
+		const filePath = `./assets/audio/${fileName}`
+
+		const protocol = req.protocol // http or https
+		const host = req.get("host") // localhost:3000
+		const audioUrl = `${protocol}://${host}/audio/${fileName}`
 
 		ffmpeg(bufferStream)
 			.inputFormat("s16le") // Gemini returns 16-bit Little Endian PCM
@@ -46,12 +52,13 @@ export const generateAudio = async (req, res) => {
 			.inputOptions("-ac 1") // Mono channel
 			.audioCodec("libmp3lame")
 			.audioBitrate("128k")
-			.save(fileName)
+			.save(filePath)
 			.on("end", () => {
 				return res.status(200).json({
 					success: true,
 					message: "MP3 generated successfully",
-					file: fileName,
+					file: filePath,
+					audioUrl: audioUrl, // NEW: Full URL for frontend
 					voice,
 				})
 			})

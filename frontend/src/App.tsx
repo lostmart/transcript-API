@@ -10,6 +10,7 @@ import EditSummary from "./pages/EditSummary"
 // Context
 import { VideoProvider } from "./context/VideoContext"
 import { OnlineProvider } from "./context/OnlineContext"
+import AudioGeneration from "./pages/AudioGeneration"
 
 function App() {
 	return (
@@ -22,6 +23,7 @@ function App() {
 							<Route path="images" element={<Images />} />
 							<Route path="edit" element={<EditSummary />} />
 							<Route path="*" element={<NotFound />} />
+							<Route path="/audio" element={<AudioGeneration />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>

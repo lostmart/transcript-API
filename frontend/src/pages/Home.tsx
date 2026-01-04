@@ -46,7 +46,7 @@ function Home() {
 			} else {
 				// Online mode - make API call
 				const response = await axios.post(
-					"http://localhost:3000/api/video/process",
+					"http://localhost:3000/api/videos/process",
 					{
 						url,
 					}

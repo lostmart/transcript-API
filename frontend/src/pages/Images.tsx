@@ -158,10 +158,7 @@ function SelectImages() {
 
 		// Save selected images to context or proceed to next step
 		console.log("Selected images:", selectedImages)
-		// navigate('/audio-generation') // Next step
-		alert(
-			"Audio generation not implemented yet. Check console for selected images."
-		)
+		navigate("/audio") // Next step
 	}
 
 	if (!videoData) return null
