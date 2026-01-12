@@ -22,8 +22,8 @@ function App() {
 							<Route index element={<Home />} />
 							<Route path="images" element={<Images />} />
 							<Route path="edit" element={<EditSummary />} />
-							<Route path="*" element={<NotFound />} />
 							<Route path="/audio" element={<AudioGeneration />} />
+							<Route path="*" element={<NotFound />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>
