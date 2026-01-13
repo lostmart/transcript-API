@@ -23,3 +23,8 @@ pnp.js
 
 
 assets/audio/*.mp3
+
+# Ignore generated files but keep the directory
+assets/summaries/*.json
+assets/summaries/*.md
+!assets/summaries/.gitkeep  # Keep the .gitkeep file

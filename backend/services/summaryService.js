@@ -7,6 +7,36 @@ dotenv.config()
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
 /**
+ * Retry helper function with exponential backoff
+ */
+const retryWithBackoff = async (fn, maxRetries = 3, baseDelay = 2000) => {
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await fn()
+		} catch (error) {
+			const isLastRetry = i === maxRetries - 1
+			const isOverloadError =
+				error.message?.includes("overloaded") ||
+				error.message?.includes("503") ||
+				error.status === "UNAVAILABLE" ||
+				error.code === 503
+
+			if (isOverloadError && !isLastRetry) {
+				const delay = baseDelay * Math.pow(2, i) // Exponential backoff: 2s, 4s, 8s
+				console.log(
+					`⏳ Gemini API overloaded. Retry ${
+						i + 1
+					}/${maxRetries} after ${delay}ms...`
+				)
+				await new Promise((resolve) => setTimeout(resolve, delay))
+			} else {
+				throw error
+			}
+		}
+	}
+}
+
+/**
  * The prompt template for generating video summaries
  */
 const scriptArchitectPrompt = (fullTranscript) => `
@@ -127,13 +157,20 @@ ${fullTranscript}
  * @returns {Promise<Object>} Structured summary with stock photo queries
  */
 export const generateSummary = async (fullTranscript) => {
-	const response = await ai.models.generateContent({
-		model: "gemini-2.5-flash",
-		contents: scriptArchitectPrompt(fullTranscript),
-		config: {
-			responseMimeType: "application/json",
+	// Wrap the API call with retry logic
+	const response = await retryWithBackoff(
+		async () => {
+			return await ai.models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: scriptArchitectPrompt(fullTranscript),
+				config: {
+					responseMimeType: "application/json",
+				},
+			})
 		},
-	})
+		3,
+		2000
+	) // 3 retries, starting with 2 second delay
 
 	const aiData = JSON.parse(response.text)
 	return aiData

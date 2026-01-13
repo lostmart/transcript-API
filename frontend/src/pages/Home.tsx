@@ -23,7 +23,7 @@ function Home() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
-		if (!url.trim() && onLine) {
+		if (!url.trim()) {
 			setError("Please enter a valid YouTube URL")
 			return
 		}
@@ -32,51 +32,73 @@ function Home() {
 		setIsLoading(true)
 		setError(null)
 
-		try {
-			if (!onLine) {
-				// Offline mode - use local mock data
-				console.log("Using local mock data (offline mode)")
+		// Retry logic for 503 errors
+		const maxRetries = 2
+		for (let attempt = 0; attempt < maxRetries; attempt++) {
+			try {
+				if (!onLine) {
+					// Offline mode - use local mock data
+					console.log("Using local mock data (offline mode)")
+					await new Promise((resolve) => setTimeout(resolve, 1000))
+					setVideoData(mockVideoData.data)
+					navigate("/edit")
+					return
+				} else {
+					// Online mode - make API call
+					const response = await axios.post(
+						"http://localhost:3000/api/videos/process",
+						{
+							url,
+						}
+					)
 
-				// Simulate API delay for realistic UX
-				await new Promise((resolve) => setTimeout(resolve, 1000))
-
-				// Use mock data
-				setVideoData(mockVideoData.data)
-				navigate("/edit")
-			} else {
-				// Online mode - make API call
-				const response = await axios.post(
-					"http://localhost:3000/api/videos/process",
-					{
-						url,
+					if (!response.data.success) {
+						throw new Error(response.data.message || "Failed to process video")
 					}
-				)
 
-				if (!response.data.success) {
-					throw new Error(response.data.message || "Failed to process video")
+					// Save data to context
+					setVideoData(response.data.data)
+
+					// Navigate to edit page
+					navigate("/edit")
+					return // Success, exit retry loop
 				}
+			} catch (err) {
+				const isLastAttempt = attempt === maxRetries - 1
 
-				// Save data to context
-				setVideoData(response.data.data)
+				if (axios.isAxiosError(err)) {
+					const isOverloaded =
+						err.response?.status === 503 || err.response?.data?.retryable
 
-				// Navigate to edit page
-				navigate("/edit")
+					if (isOverloaded && !isLastAttempt) {
+						// Wait before retry
+						const delay = 3000 * (attempt + 1)
+						console.log(`Service overloaded. Retrying in ${delay}ms...`)
+						setError(
+							`AI service is busy. Retrying in ${delay / 1000} seconds...`
+						)
+						await new Promise((resolve) => setTimeout(resolve, delay))
+						continue // Retry
+					}
+
+					// Handle axios-specific errors
+					const message =
+						err.response?.data?.message ||
+						err.message ||
+						"Failed to process video"
+					setError(message)
+				} else {
+					setError(err instanceof Error ? err.message : "An error occurred")
+				}
+				console.error("Error processing video:", err)
+				break // Exit on non-retryable error
+			} finally {
+				if (attempt === maxRetries - 1) {
+					setIsLoading(false)
+				}
 			}
-		} catch (err) {
-			if (axios.isAxiosError(err)) {
-				// Handle axios-specific errors
-				const message =
-					err.response?.data?.message ||
-					err.message ||
-					"Failed to process video"
-				setError(message)
-			} else {
-				setError(err instanceof Error ? err.message : "An error occurred")
-			}
-			console.error("Error processing video:", err)
-		} finally {
-			setIsLoading(false)
 		}
+		setIsLoading(false)
 	}
 
 	return (
