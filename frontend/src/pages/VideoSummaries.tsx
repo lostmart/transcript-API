@@ -35,8 +35,12 @@ function Summaries() {
 				throw new Error(response.data.message || "Failed to fetch summaries")
 			}
 
-			// Sort by creation date (newest first)
-			const sorted = response.data.summaries.sort(
+			// Filter only JSON files and sort by creation date (newest first)
+			const jsonFiles = response.data.summaries.filter((s: Summary) =>
+				s.filename.endsWith(".json")
+			)
+
+			const sorted = jsonFiles.sort(
 				(a: Summary, b: Summary) =>
 					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 			)
@@ -139,10 +143,6 @@ function Summaries() {
 		// Extract video ID from filename like: summary-dQw4w9WgXcQ-1767555123456.json
 		const match = filename.match(/summary-([^-]+)-/)
 		return match ? match[1] : "Unknown"
-	}
-
-	const getFileType = (filename: string) => {
-		return filename.endsWith(".json") ? "JSON" : "MD"
 	}
 
 	if (isLoading) {
@@ -261,7 +261,6 @@ function Summaries() {
 								formatDate={formatDate}
 								formatFileSize={formatFileSize}
 								getVideoId={getVideoIdFromFilename}
-								getFileType={getFileType}
 							/>
 						))}
 					</div>
@@ -288,7 +287,6 @@ interface SummaryCardProps {
 	formatDate: (date: string) => string
 	formatFileSize: (size: number) => string
 	getVideoId: (filename: string) => string
-	getFileType: (filename: string) => string
 }
 
 function SummaryCard({
@@ -298,9 +296,7 @@ function SummaryCard({
 	formatDate,
 	formatFileSize,
 	getVideoId,
-	getFileType,
 }: SummaryCardProps) {
-	const fileType = getFileType(summary.filename)
 	const videoId = getVideoId(summary.filename)
 
 	return (
@@ -323,14 +319,8 @@ function SummaryCard({
 							/>
 						</svg>
 					</div>
-					<span
-						className={`px-2 py-1 text-xs font-semibold rounded ${
-							fileType === "JSON"
-								? "bg-green-100 text-green-700"
-								: "bg-purple-100 text-purple-700"
-						}`}
-					>
-						{fileType}
+					<span className="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-700">
+						JSON
 					</span>
 				</div>
 			</div>

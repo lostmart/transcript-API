@@ -136,11 +136,11 @@ const generateMarkdown = (summaryData, videoId) => {
  */
 export const saveSummaryBothFormats = (summaryData, videoId) => {
 	const jsonFile = saveSummaryAsJSON(summaryData, videoId)
-	const markdownFile = saveSummaryAsMarkdown(summaryData, videoId)
+	// const markdownFile = saveSummaryAsMarkdown(summaryData, videoId)
 
 	return {
 		json: jsonFile,
-		markdown: markdownFile,
+		// markdown: markdownFile,
 	}
 }
 
