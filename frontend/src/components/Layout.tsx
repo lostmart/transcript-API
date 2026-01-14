@@ -42,6 +42,17 @@ function Layout() {
 							>
 								Images
 							</Link>
+							<Link
+								to="/video-summaries"
+								className={`px-4 py-2 rounded-lg transition-colors ${
+									location.pathname === "/video-summaries"
+										? "bg-blue-100 text-blue-700"
+										: "text-gray-600 hover:bg-gray-100"
+								}`}
+							>
+								Video Summaries
+							</Link>
+							
 						</div>
 					</div>
 				</div>

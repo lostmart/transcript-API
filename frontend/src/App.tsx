@@ -6,6 +6,7 @@ import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import Images from "./pages/Images"
 import EditSummary from "./pages/EditSummary"
+import VideoSummaries from "./pages/VideoSummaries"
 
 // Context
 import { VideoProvider } from "./context/VideoContext"
@@ -23,6 +24,7 @@ function App() {
 							<Route path="images" element={<Images />} />
 							<Route path="edit" element={<EditSummary />} />
 							<Route path="/audio" element={<AudioGeneration />} />
+							<Route path="video-summaries" element={<VideoSummaries />} />
 							<Route path="*" element={<NotFound />} />
 						</Route>
 					</Routes>
