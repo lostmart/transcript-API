@@ -1,10 +1,6 @@
 import { createContext, useContext, useState } from "react"
 import type { ReactNode } from "react"
 
-// interface StockPhotoQueries {
-// 	[key: string]: string[]
-// }
-
 interface Section {
 	heading: string
 	content: string
