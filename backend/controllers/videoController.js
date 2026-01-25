@@ -4,7 +4,7 @@ import {
 	fetchTranscript,
 } from "../services/transcriptService.js"
 import { generateSummary } from "../services/summaryService.js"
-import { saveSummaryBothFormats } from "../services/storageService.js" // NEW
+import { saveSummary } from "../services/storageService.js" // CHANGED: Use saveSummary instead
 
 dotenv.config()
 
@@ -33,20 +33,15 @@ export const processVideo = async (req, res) => {
 		const aiData = await generateSummary(fullTranscript)
 		console.log(`✅ Summary generated successfully`)
 
-		// 3. Save summary to files (NEW)
-		console.log(`💾 Saving summary to files...`)
-		const savedFiles = saveSummaryBothFormats(aiData, videoID)
-		console.log(
-			`✅ Saved: ${savedFiles.json.filename} & ${savedFiles.markdown.filename}`
-		)
+		// 3. Save summary to file (JSON only)
+		console.log(`💾 Saving summary to file...`)
+		const savedFile = saveSummary(aiData, videoID) // CHANGED: Single file
+		console.log(`✅ Saved: ${savedFile.filename}`)
 
 		return res.status(200).json({
 			success: true,
 			data: aiData,
-			files: {
-				json: savedFiles.json.filename,
-				markdown: savedFiles.markdown.filename,
-			},
+			file: savedFile.filename, // CHANGED: Single file instead of files object
 		})
 	} catch (error) {
 		console.error("❌ Video Processing Error:", error)
